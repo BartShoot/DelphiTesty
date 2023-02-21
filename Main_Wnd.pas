@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, System.Threading, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
-  Vcl.Dialogs, Vcl.StdCtrls, ViewModel;
+  Vcl.Dialogs, Vcl.StdCtrls;
 
 type
   TForm1 = class(TForm)
@@ -25,7 +25,6 @@ type
 
 var
   Form1: TForm1;
-  gIsWorking: Boolean;
 
 implementation
 
@@ -38,7 +37,7 @@ var
   lSum: integer;
   lValues: array of Integer;
 begin
-  gIsWorking := True;
+  //gIsWorking := True;
 	LastValue.Caption := '--';
   TTask.Run(procedure
   	begin

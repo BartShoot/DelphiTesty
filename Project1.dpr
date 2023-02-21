@@ -2,9 +2,8 @@ program Project1;
 
 uses
   Vcl.Forms,
-  View in 'View.pas' {Form1},
-  ViewModel in 'ViewModel.pas',
-  Model in 'Model.pas';
+  Main_Wnd in 'Main_Wnd.pas' {Form1},
+  Generation_Code in 'Generation_Code.pas';
 
 {$R *.res}
 
