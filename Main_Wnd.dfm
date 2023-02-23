@@ -48,7 +48,7 @@ object Form1: TForm1
     Height = 25
     Caption = 'Press'
     TabOrder = 0
-    OnClick = AsyncStartIntGenerationClick
+    OnClick = StartGenerationClick
   end
   object StopIntGeneration: TButton
     Left = 296

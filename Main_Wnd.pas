@@ -2,8 +2,7 @@ unit Main_Wnd;
 
 interface
 
-uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+uses Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, System.Threading, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   Vcl.Dialogs, Vcl.StdCtrls;
 
@@ -15,8 +14,8 @@ type
     LastValueLabel: TLabel;
     AverageValueLabel: TLabel;
     AverageValue: TLabel;
-    procedure AsyncStartIntGenerationClick(Sender: TObject);
 		procedure StopIntGenerationClick(Sender: TObject);
+		procedure StartGenerationClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -28,40 +27,29 @@ var
 
 implementation
 
+uses Results_Code, Generation_Code;
+
+var
+  lSignalGenerator: TSignalGenerator;
+  lResults: TResults;
+
 {$R *.dfm}
 
-procedure TForm1.AsyncStartIntGenerationClick(Sender: TObject);
-var
-  lValue: Integer;
-  lIndex: Integer;
-  lSum: integer;
-  lValues: array of Integer;
+procedure TForm1.StartGenerationClick(Sender: TObject);
 begin
-  //gIsWorking := True;
-	LastValue.Caption := '--';
-  TTask.Run(procedure
-  	begin
-      while gIsWorking do
-      begin
-        Sleep(500);
-        lValue := Random(10);
-        lIndex := Length(lValues);
-        SetLength(lValues, lIndex+1);
-        lValues[lIndex] := lValue;
-        lSum := lSum + lValue;
-        AverageValue.Caption := (lSum/(lIndex+1)).ToString;
-        TThread.Synchronize(nil,
-      	procedure
-        begin
-        	LastValue.Caption := lValue.ToString;
-        end);
-      end;
-    end);
+  //odpalenie
 end;
 
 procedure TForm1.StopIntGenerationClick(Sender: TObject);
+var
+  lTest: TSignalGenerator;
 begin
-  gIsWorking := False;
+  //gIsWorking := False;
+end;
+
+initialization
+begin
+  lSignalGenerator := TSignalGenerator.Create(1.5, 1);
 end;
 
 end.

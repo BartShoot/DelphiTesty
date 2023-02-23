@@ -2,69 +2,63 @@ unit Generation_Code;
 
 interface
 
-uses System.Diagnostics, Vcl.StdCtrls, System.SysUtils, System.Threading, System.Classes;
+uses System.Diagnostics, System.SysUtils, System.Threading, System.Classes,
+  System.Generics.Collections;
 
 implementation
+
 type
-  SignalGenerator = class
-    fSignalRate: Real;
+  TSignalGenerator = class
+    fSignalRatePerSecond: Real;
+    fSignalInterval: Real;
     fSignalAmount: Integer;
     fStopwatch: TStopwatch;
     fIsWorking: Boolean;
-    procedure GenerateRandomIntegers(var LastValue, AverageValue: TLabel);
-    procedure StartTaskRandomIntegerGeneration(var LastValue, AverageValue: TLabel);
-    procedure SynchronizeLastValue(var LastValue: Tlabel; value: Integer);
-    function SetLastValue(var LastValue: Tlabel; value: Integer) : TThreadProcedure;
+    fTemporaryResults: TList<Integer>;
+
+  public
+    constructor Create(SignalRatePerSecond: Real; SignalAmount: Integer);
+    destructor Destroy; override;
+    function GenerateSignals: TList<Integer>;
   end;
 
-procedure SignalGenerator.GenerateRandomIntegers(var LastValue, AverageValue: TLabel);
-var
-  lValue: Integer;
-  lIndex: Integer;
-  lSum: integer;
-  lValues: array of Integer;
+constructor TSignalGenerator.Create(SignalRatePerSecond: Real;
+  SignalAmount: Integer);
 begin
-  lSum := 0;
-  while fIsWorking do
-  begin
-    Sleep(500);
-    lValue := Random(10);
-    lIndex := Length(lValues);
-    SetLength(lValues, lIndex+1);
-    lValues[lIndex] := lValue;
-    lSum := lSum + lValue;
-    AverageValue.Caption := (lSum/(lIndex+1)).ToString;
-    SynchronizeLastValue(LastValue, lValue);
-  end;
+  fSignalInterval := SignalRatePerSecond / 60;
+  fSignalRatePerSecond := SignalRatePerSecond;
+  fSignalAmount := SignalAmount;
+  fStopwatch := TStopwatch.Create;
+  fTemporaryResults := TList<Integer>.Create;
 end;
 
-procedure SignalGenerator.SynchronizeLastValue(var LastValue: Tlabel; value: Integer);
-var
-  lSetLastValue : TThreadProcedure;
+destructor TSignalGenerator.Destroy;
 begin
-  lSetLastValue := SetLastValue(LastValue, value);
-  TThread.Synchronize(nil, lSetLastValue);
+  fTemporaryResults.Free;
+  inherited;
 end;
 
-function SignalGenerator.SetLastValue(var LastValue: Tlabel; value: Integer) : TThreadProcedure;
+function TSignalGenerator.GenerateSignals: TList<Integer>;
+var
+  lTask: ITask;
 begin
-  Result :=
+  lTask := TTask.Create(
     procedure
     begin
-      LastValue.Caption := value.ToString;
-    end;
+      var
+        i: Integer;
+      for i := 0 to fSignalAmount do
+      begin
+        fStopwatch.Start;
+        Sleep(50);
+        fStopwatch.Stop;
+        fTemporaryResults.Add(fStopwatch.ElapsedMilliseconds);
+        Sleep(Round(fSignalInterval * 1000) - fStopwatch.ElapsedMilliseconds);
+      end;
+    end);
+  lTask.Start;
+  TTask.WaitForAll(lTask);
+  Result := fTemporaryResults;
 end;
 
-
-procedure SignalGenerator.StartTaskRandomIntegerGeneration(var LastValue, AverageValue: TLabel);
-  var
-  lValue: Integer;
-  lIndex: Integer;
-  lSum: integer;
-  lValues: array of Integer;
-begin
-  fIsWorking := True;
-	LastValue.Caption := '--';
-  TTask.Run(GenerateRandomIntegers(LastValue, AverageValue));
-end;
 end.

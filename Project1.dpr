@@ -3,7 +3,8 @@ program Project1;
 uses
   Vcl.Forms,
   Main_Wnd in 'Main_Wnd.pas' {Form1},
-  Generation_Code in 'Generation_Code.pas';
+  Generation_Code in 'Generation_Code.pas',
+  Results_Code in 'Results_Code.pas';
 
 {$R *.res}
 
