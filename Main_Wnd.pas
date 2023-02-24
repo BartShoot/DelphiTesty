@@ -36,20 +36,28 @@ var
 {$R *.dfm}
 
 procedure TForm1.StartGenerationClick(Sender: TObject);
+var
+  lCount : Integer;
 begin
-  //odpalenie
+  lCount := lSignalGenerator.GenerateSignals.Count;
+  LastValue.Caption := lCount.ToString;
+  //lResult := TResults.Create(lCount);
 end;
 
 procedure TForm1.StopIntGenerationClick(Sender: TObject);
-var
-  lTest: TSignalGenerator;
 begin
   //gIsWorking := False;
 end;
 
 initialization
 begin
-  lSignalGenerator := TSignalGenerator.Create(1.5, 1);
+  lSignalGenerator := TSignalGenerator.Create(1.5, 5);
+end;
+
+finalization
+begin
+  lSignalGenerator.Free;
+  lResults.Free;
 end;
 
 end.

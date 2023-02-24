@@ -5,8 +5,6 @@ interface
 uses System.Diagnostics, System.SysUtils, System.Threading, System.Classes,
   System.Generics.Collections;
 
-implementation
-
 type
   TSignalGenerator = class
     fSignalRatePerSecond: Real;
@@ -22,10 +20,14 @@ type
     function GenerateSignals: TList<Integer>;
   end;
 
+implementation
+
+
+
 constructor TSignalGenerator.Create(SignalRatePerSecond: Real;
   SignalAmount: Integer);
 begin
-  fSignalInterval := SignalRatePerSecond / 60;
+  fSignalInterval := 1 / SignalRatePerSecond;
   fSignalRatePerSecond := SignalRatePerSecond;
   fSignalAmount := SignalAmount;
   fStopwatch := TStopwatch.Create;

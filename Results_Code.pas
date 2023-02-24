@@ -2,11 +2,19 @@ unit Results_Code;
 
 interface
 
-implementation
 type
   TResults = class
     fResultAmount: Integer;
     fActualTimeMs: UInt32;
-    fIsWorking: Boolean;
+  public
+    constructor Create(ResultAmount : Integer);
   end;
+
+implementation
+
+constructor TResults.Create(ResultAmount : Integer);
+begin
+  fResultAmount := ResultAmount;
+end;
+
 end.
