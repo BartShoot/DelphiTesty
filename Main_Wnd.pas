@@ -38,9 +38,19 @@ var
 procedure TForm1.StartGenerationClick(Sender: TObject);
 var
   lCount : Integer;
+  lTask: ITask;
 begin
-  lCount := lSignalGenerator.GenerateSignals.Count;
-  LastValue.Caption := lCount.ToString;
+  lTask := TTask.Create(
+    procedure
+    begin
+      lCount := lSignalGenerator.GenerateSignals.Count;
+      TThread.Synchronize(TThread.Current,
+       procedure
+       begin
+         LastValue.Caption := lCount.ToString;
+       end);
+    end);
+  lTask.Start;
   //lResult := TResults.Create(lCount);
 end;
 

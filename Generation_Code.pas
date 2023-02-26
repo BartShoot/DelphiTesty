@@ -41,25 +41,17 @@ begin
 end;
 
 function TSignalGenerator.GenerateSignals: TList<Integer>;
-var
-  lTask: ITask;
 begin
-  lTask := TTask.Create(
-    procedure
-    begin
-      var
-        i: Integer;
-      for i := 0 to fSignalAmount do
-      begin
-        fStopwatch.Start;
-        Sleep(50);
-        fStopwatch.Stop;
-        fTemporaryResults.Add(fStopwatch.ElapsedMilliseconds);
-        Sleep(Round(fSignalInterval * 1000) - fStopwatch.ElapsedMilliseconds);
-      end;
-    end);
-  lTask.Start;
-  TTask.WaitForAll(lTask);
+  var
+    i: Integer;
+  for i := 0 to fSignalAmount do
+  begin
+    fStopwatch.Start;
+    Sleep(50);
+    fStopwatch.Stop;
+    fTemporaryResults.Add(fStopwatch.ElapsedMilliseconds);
+    Sleep(Round(fSignalInterval * 1000) - fStopwatch.ElapsedMilliseconds);
+  end;
   Result := fTemporaryResults;
 end;
 
